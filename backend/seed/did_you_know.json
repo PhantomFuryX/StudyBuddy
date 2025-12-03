@@ -1,0 +1,122 @@
+[
+  {
+    "fact": "India has 28 States and 8 Union Territories as of 2024.",
+    "category": "gk",
+    "tags": ["geography", "india"],
+    "importance": 3
+  },
+  {
+    "fact": "The Indian Constitution is the longest written constitution in the world with 448 articles and 12 schedules.",
+    "category": "gk",
+    "tags": ["polity", "constitution"],
+    "importance": 3
+  },
+  {
+    "fact": "Mount Everest grows approximately 4mm every year due to geological uplift.",
+    "category": "gk",
+    "tags": ["geography", "science"],
+    "importance": 2
+  },
+  {
+    "fact": "The first railway line in India ran between Mumbai and Thane in 1853.",
+    "category": "gk",
+    "tags": ["history", "railways"],
+    "importance": 3
+  },
+  {
+    "fact": "India has the world's largest postal network with over 1.5 lakh post offices.",
+    "category": "gk",
+    "tags": ["india", "records"],
+    "importance": 2
+  },
+  {
+    "fact": "The Fibonacci sequence appears naturally in sunflower seed patterns, pinecones, and nautilus shells.",
+    "category": "reasoning",
+    "tags": ["mathematics", "nature"],
+    "importance": 2
+  },
+  {
+    "fact": "ISRO's budget is less than NASA's annual budget for paper clips, yet they sent a spacecraft to Mars!",
+    "category": "current_affairs",
+    "tags": ["isro", "space"],
+    "importance": 2
+  },
+  {
+    "fact": "Chandragupta Maurya's empire was larger than the present-day Republic of India.",
+    "category": "gk",
+    "tags": ["history", "maurya"],
+    "importance": 2
+  },
+  {
+    "fact": "The Indian rupee symbol ₹ was designed by D. Udaya Kumar and adopted in 2010.",
+    "category": "gk",
+    "tags": ["economy", "symbols"],
+    "importance": 2
+  },
+  {
+    "fact": "India has never invaded any country in its 10,000 years of history.",
+    "category": "gk",
+    "tags": ["history", "india"],
+    "importance": 2
+  },
+  {
+    "fact": "Chess was invented in India. The original name was 'Chaturanga'.",
+    "category": "gk",
+    "tags": ["games", "india"],
+    "importance": 2
+  },
+  {
+    "fact": "The number zero was invented by Indian mathematician Aryabhata.",
+    "category": "gk",
+    "tags": ["mathematics", "india"],
+    "importance": 3
+  },
+  {
+    "fact": "Article 21 (Right to Life) is the most important fundamental right and cannot be suspended even during Emergency.",
+    "category": "gk",
+    "tags": ["polity", "constitution"],
+    "importance": 3
+  },
+  {
+    "fact": "The President of India has the power to pardon death sentences under Article 72.",
+    "category": "gk",
+    "tags": ["polity", "president"],
+    "importance": 2
+  },
+  {
+    "fact": "India's first satellite Aryabhata was launched on April 19, 1975 from Soviet Union.",
+    "category": "gk",
+    "tags": ["space", "isro"],
+    "importance": 2
+  },
+  {
+    "fact": "Kumbh Mela is the largest peaceful gathering on Earth, visible from space!",
+    "category": "gk",
+    "tags": ["culture", "festivals"],
+    "importance": 2
+  },
+  {
+    "fact": "The Taj Mahal's construction took 22 years and employed 22,000 workers.",
+    "category": "gk",
+    "tags": ["history", "monuments"],
+    "importance": 2
+  },
+  {
+    "fact": "Yoga and Ayurveda both originated in India over 5,000 years ago.",
+    "category": "gk",
+    "tags": ["culture", "health"],
+    "importance": 2
+  },
+  {
+    "fact": "India has the world's second-largest road network spanning 6.4 million km.",
+    "category": "gk",
+    "tags": ["infrastructure", "india"],
+    "importance": 2
+  },
+  {
+    "fact": "Spaced repetition helps you remember 90% of what you learn, vs 30% with normal revision!",
+    "category": "study_tips",
+    "tags": ["study", "memory"],
+    "importance": 3
+  }
+]

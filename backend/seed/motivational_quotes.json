@@ -1,0 +1,122 @@
+[
+  {
+    "quote": "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+    "author": "Winston Churchill",
+    "category": "motivation",
+    "for_situation": "failure"
+  },
+  {
+    "quote": "The only way to do great work is to love what you do.",
+    "author": "Steve Jobs",
+    "category": "motivation",
+    "for_situation": "general"
+  },
+  {
+    "quote": "Believe you can and you're halfway there.",
+    "author": "Theodore Roosevelt",
+    "category": "motivation",
+    "for_situation": "self-doubt"
+  },
+  {
+    "quote": "मेहनत इतनी खामोशी से करो कि सफलता शोर मचा दे।",
+    "author": "Hindi Proverb",
+    "category": "motivation",
+    "for_situation": "hard-work"
+  },
+  {
+    "quote": "कोशिश करने वालों की हार नहीं होती।",
+    "author": "Harivansh Rai Bachchan",
+    "category": "motivation",
+    "for_situation": "persistence"
+  },
+  {
+    "quote": "Hard work beats talent when talent doesn't work hard.",
+    "author": "Tim Notke",
+    "category": "motivation",
+    "for_situation": "competition"
+  },
+  {
+    "quote": "Discipline is the bridge between goals and accomplishment.",
+    "author": "Jim Rohn",
+    "category": "motivation",
+    "for_situation": "discipline"
+  },
+  {
+    "quote": "छोटे छोटे कदम भी बड़ी मंज़िल तक पहुँचाते हैं।",
+    "author": "Hindi Proverb",
+    "category": "motivation",
+    "for_situation": "progress"
+  },
+  {
+    "quote": "The future belongs to those who believe in the beauty of their dreams.",
+    "author": "Eleanor Roosevelt",
+    "category": "motivation",
+    "for_situation": "dreams"
+  },
+  {
+    "quote": "Don't watch the clock; do what it does. Keep going.",
+    "author": "Sam Levenson",
+    "category": "motivation",
+    "for_situation": "consistency"
+  },
+  {
+    "quote": "You don't have to be great to start, but you have to start to be great.",
+    "author": "Zig Ziglar",
+    "category": "motivation",
+    "for_situation": "beginning"
+  },
+  {
+    "quote": "जो लोग कहते हैं कि ये impossible है, उन्हें उन लोगों को रोकना नहीं चाहिए जो कर रहे हैं।",
+    "author": "Albert Einstein (Hindi)",
+    "category": "motivation",
+    "for_situation": "doubt"
+  },
+  {
+    "quote": "सफलता का कोई shortcut नहीं होता, रास्ता कठिन है पर मंज़िल खूबसूरत है।",
+    "author": "Anonymous",
+    "category": "motivation",
+    "for_situation": "hard-work"
+  },
+  {
+    "quote": "Your time is limited, don't waste it living someone else's life.",
+    "author": "Steve Jobs",
+    "category": "motivation",
+    "for_situation": "focus"
+  },
+  {
+    "quote": "It does not matter how slowly you go as long as you do not stop.",
+    "author": "Confucius",
+    "category": "motivation",
+    "for_situation": "slow-progress"
+  },
+  {
+    "quote": "One hour of practice is worth five hours of foot-dragging.",
+    "author": "Anonymous",
+    "category": "study",
+    "for_situation": "procrastination"
+  },
+  {
+    "quote": "आज का काम कल पर मत छोड़ो, क्योंकि कल के पास भी अपना काम होगा।",
+    "author": "Hindi Proverb",
+    "category": "study",
+    "for_situation": "procrastination"
+  },
+  {
+    "quote": "Push yourself, because no one else is going to do it for you.",
+    "author": "Anonymous",
+    "category": "motivation",
+    "for_situation": "self-motivation"
+  },
+  {
+    "quote": "The secret of getting ahead is getting started.",
+    "author": "Mark Twain",
+    "category": "motivation",
+    "for_situation": "beginning"
+  },
+  {
+    "quote": "Consistency is more important than perfection.",
+    "author": "Anonymous",
+    "category": "study",
+    "for_situation": "consistency"
+  }
+]

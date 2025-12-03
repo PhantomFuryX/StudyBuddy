@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Question Extractor - Test Tool</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 { color: #333; }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        input[type="file"], input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background: #45a049; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .status.info { background: #e3f2fd; color: #1976d2; }
+        .status.success { background: #e8f5e9; color: #388e3c; }
+        .status.error { background: #ffebee; color: #c62828; }
+        .questions-container {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .question-card {
+            background: #fafafa;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        .question-card h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+        .options li {
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .options li.correct {
+            background: #c8e6c9;
+            border-left: 3px solid #4CAF50;
+        }
+        .options li.wrong {
+            background: #f5f5f5;
+        }
+        .category-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+        .stat-item .number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .stat-item .label {
+            color: #666;
+            font-size: 14px;
+        }
+        #login-section { display: block; }
+        #upload-section { display: none; }
+        .flex-row {
+            display: flex;
+            gap: 10px;
+        }
+        .flex-row > * { flex: 1; }
+    </style>
+</head>
+<body>
+    <h1>📄 PDF Question Extractor</h1>
+    
+    <!-- Login Section -->
+    <div id="login-section" class="card">
+        <h3>Login First</h3>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" value="test@example.com">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" value="password123">
+        </div>
+        <button onclick="login()">Login</button>
+        <div id="login-status"></div>
+    </div>
+
+    <!-- Upload Section -->
+    <div id="upload-section">
+        <div class="card">
+            <h3>Upload PDF</h3>
+            <div class="form-group">
+                <label>Select PDF File</label>
+                <input type="file" id="pdfFile" accept=".pdf">
+            </div>
+            <div class="flex-row">
+                <div class="form-group">
+                    <label>Skip Categories (comma-separated)</label>
+                    <input type="text" id="skipCategories" placeholder="reasoning" value="reasoning">
+                </div>
+                <div class="form-group">
+                    <label>Override Category (optional)</label>
+                    <select id="overrideCategory">
+                        <option value="">Auto-detect from PDF</option>
+                        <option value="gk">General Knowledge</option>
+                        <option value="current_affairs">Current Affairs</option>
+                        <option value="reasoning">Reasoning</option>
+                        <option value="quantitative_aptitude">Quantitative Aptitude</option>
+                        <option value="english">English</option>
+                    </select>
+                </div>
+            </div>
+            <button onclick="uploadPDF()" id="uploadBtn">Upload & Extract Questions</button>
+            <div id="upload-status"></div>
+        </div>
+
+        <div class="card" id="stats-section" style="display:none;">
+            <h3>Extraction Results</h3>
+            <div class="stats" id="stats"></div>
+        </div>
+
+        <div class="card" id="questions-section" style="display:none;">
+            <h3>Extracted Questions <span id="question-count"></span></h3>
+            <div class="questions-container" id="questions"></div>
+        </div>
+
+        <div class="card">
+            <h3>🌐 Scrape PDFs from Pages</h3>
+            <p>Enter page URLs that contain PDF links (e.g., cracku.in, adda247.com). The tool will scrape PDF links and ingest them.</p>
+            <div class="form-group">
+                <label>Page URLs (one per line)</label>
+                <textarea id="pageUrls" rows="4" style="width:100%;padding:10px;">https://cracku.in/ssc-cgl-previous-papers
+https://www.adda247.com/jobs/ssc-cgl-previous-year-question-paper/</textarea>
+            </div>
+            <div class="flex-row">
+                <div class="form-group">
+                    <label>Skip Categories</label>
+                    <input type="text" id="urlSkip" value="reasoning" placeholder="reasoning,english">
+                </div>
+                <div class="form-group">
+                    <button onclick="scrapePdfs()" style="margin-top:20px;">🔍 Preview PDF Links</button>
+                </div>
+            </div>
+            <button onclick="ingestFromUrls()" id="urlIngestBtn" style="background:#2196F3;">📥 Scrape & Ingest PDFs</button>
+            <div id="url-ingest-status"></div>
+            <div id="scraped-links"></div>
+        </div>
+
+        <div class="card">
+            <h3>Your Question Bank</h3>
+            <button onclick="fetchCustomQuestions()">Load My Questions</button>
+            <button onclick="clearQuestions()" style="background:#f44336;">Clear All Questions</button>
+            <div id="custom-questions-status"></div>
+            <div class="questions-container" id="custom-questions"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let authToken = localStorage.getItem('authToken') || '';
+
+        // Check if already logged in
+        if (authToken) {
+            showUploadSection();
+        }
+
+        function showStatus(elementId, message, type) {
+            const el = document.getElementById(elementId);
+            el.className = 'status ' + type;
+            el.textContent = message;
+        }
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                if (!res.ok) {
+                    // Try to register
+                    const regRes = await fetch(`${API_BASE}/auth/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password, name: 'Test User' })
+                    });
+                    if (!regRes.ok) throw new Error('Login/Register failed');
+                    const regData = await regRes.json();
+                    authToken = regData.access_token;
+                } else {
+                    const data = await res.json();
+                    authToken = data.access_token;
+                }
+                
+                localStorage.setItem('authToken', authToken);
+                showStatus('login-status', 'Logged in successfully!', 'success');
+                showUploadSection();
+            } catch (err) {
+                showStatus('login-status', 'Error: ' + err.message, 'error');
+            }
+        }
+
+        function showUploadSection() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('upload-section').style.display = 'block';
+        }
+
+        async function uploadPDF() {
+            const fileInput = document.getElementById('pdfFile');
+            const skipCategories = document.getElementById('skipCategories').value;
+            const overrideCategory = document.getElementById('overrideCategory').value;
+            
+            if (!fileInput.files[0]) {
+                showStatus('upload-status', 'Please select a PDF file', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('skip_categories', skipCategories);
+            formData.append('category', overrideCategory);
+
+            document.getElementById('uploadBtn').disabled = true;
+            showStatus('upload-status', 'Uploading and processing...', 'info');
+
+            try {
+                const res = await fetch(`${API_BASE}/upload/pdf`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${authToken}` },
+                    body: formData
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || 'Upload failed');
+
+                showStatus('upload-status', 'Upload started! Checking status...', 'info');
+                
+                // Poll for completion
+                pollStatus(data.job_id);
+            } catch (err) {
+                showStatus('upload-status', 'Error: ' + err.message, 'error');
+                document.getElementById('uploadBtn').disabled = false;
+            }
+        }
+
+        async function pollStatus(jobId) {
+            const maxAttempts = 60; // 5 minutes max
+            let attempts = 0;
+
+            const poll = async () => {
+                try {
+                    const res = await fetch(`${API_BASE}/upload/status/${jobId}`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    const data = await res.json();
+
+                    if (data.status === 'done') {
+                        showStatus('upload-status', `✅ Complete! Extracted ${data.added || 0} questions`, 'success');
+                        showStats(data);
+                        fetchCustomQuestions();
+                        document.getElementById('uploadBtn').disabled = false;
+                    } else if (data.status === 'error') {
+                        showStatus('upload-status', `❌ Error: ${data.message}`, 'error');
+                        document.getElementById('uploadBtn').disabled = false;
+                    } else {
+                        showStatus('upload-status', `Processing... (${data.status}) - ${data.extracted || 0} found`, 'info');
+                        attempts++;
+                        if (attempts < maxAttempts) {
+                            setTimeout(poll, 5000);
+                        } else {
+                            showStatus('upload-status', 'Timeout waiting for processing', 'error');
+                            document.getElementById('uploadBtn').disabled = false;
+                        }
+                    }
+                } catch (err) {
+                    showStatus('upload-status', 'Error checking status: ' + err.message, 'error');
+                    document.getElementById('uploadBtn').disabled = false;
+                }
+            };
+
+            poll();
+        }
+
+        function showStats(data) {
+            document.getElementById('stats-section').style.display = 'block';
+            document.getElementById('stats').innerHTML = `
+                <div class="stat-item">
+                    <div class="number">${data.added || 0}</div>
+                    <div class="label">Questions Added</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">${data.extracted || 0}</div>
+                    <div class="label">Found in PDF</div>
+                </div>
+            `;
+        }
+
+        async function fetchCustomQuestions() {
+            try {
+                const res = await fetch(`${API_BASE}/questions/custom?count=100`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const data = await res.json();
+                
+                document.getElementById('custom-questions-status').innerHTML = 
+                    `<div class="status success">Found ${data.custom_count} custom questions</div>`;
+                
+                displayQuestions(data.questions, 'custom-questions');
+            } catch (err) {
+                showStatus('custom-questions-status', 'Error: ' + err.message, 'error');
+            }
+        }
+
+        async function clearQuestions() {
+            if (!confirm('Are you sure you want to delete all your custom questions?')) return;
+            
+            try {
+                const res = await fetch(`${API_BASE}/questions/custom`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const data = await res.json();
+                showStatus('custom-questions-status', 'Questions cleared!', 'success');
+                document.getElementById('custom-questions').innerHTML = '';
+            } catch (err) {
+                showStatus('custom-questions-status', 'Error: ' + err.message, 'error');
+            }
+        }
+
+        function displayQuestions(questions, containerId) {
+            const container = document.getElementById(containerId);
+            if (!questions || questions.length === 0) {
+                container.innerHTML = '<p>No questions found</p>';
+                return;
+            }
+
+            // Group by category
+            const byCategory = {};
+            questions.forEach(q => {
+                const cat = q.category || 'custom';
+                if (!byCategory[cat]) byCategory[cat] = [];
+                byCategory[cat].push(q);
+            });
+
+            let html = '';
+            for (const [cat, qs] of Object.entries(byCategory)) {
+                html += `<h4>${cat.toUpperCase()} (${qs.length} questions)</h4>`;
+                qs.forEach((q, i) => {
+                    html += `
+                        <div class="question-card">
+                            <h4>Q${i + 1}. ${escapeHtml(q.question)}</h4>
+                            <span class="category-badge">${q.category}</span>
+                            <ul class="options">
+                                ${q.options.map((opt, idx) => `
+                                    <li class="${idx === q.answer_index ? 'correct' : 'wrong'}">
+                                        ${idx === q.answer_index ? '✓' : '✗'} ${escapeHtml(opt)}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                });
+            }
+            container.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function scrapePdfs() {
+            const urls = document.getElementById('pageUrls').value
+                .split('\n')
+                .map(u => u.trim())
+                .filter(u => u.length > 0);
+            
+            if (urls.length === 0) {
+                showStatus('url-ingest-status', 'Please enter at least one URL', 'error');
+                return;
+            }
+
+            showStatus('url-ingest-status', 'Scraping pages for PDF links...', 'info');
+            document.getElementById('scraped-links').innerHTML = '';
+
+            let allLinks = [];
+            for (const url of urls) {
+                try {
+                    const res = await fetch(`${API_BASE}/admin/scrape-pdfs?url=${encodeURIComponent(url)}`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    const data = await res.json();
+                    if (data.links) {
+                        allLinks = allLinks.concat(data.links);
+                    }
+                } catch (err) {
+                    console.error('Scrape error:', err);
+                }
+            }
+
+            // Deduplicate
+            allLinks = [...new Set(allLinks)];
+
+            let html = `<div class="status success">Found ${allLinks.length} PDF links</div>`;
+            if (allLinks.length > 0) {
+                html += '<ul style="max-height:200px;overflow-y:auto;font-size:12px;">';
+                allLinks.slice(0, 30).forEach(link => {
+                    html += `<li><a href="${link}" target="_blank">${link.substring(0, 80)}...</a></li>`;
+                });
+                html += '</ul>';
+            }
+            document.getElementById('scraped-links').innerHTML = html;
+            showStatus('url-ingest-status', `Found ${allLinks.length} PDF links. Click "Scrape & Ingest" to download and process them.`, 'success');
+        }
+
+        async function ingestFromUrls() {
+            const urls = document.getElementById('pageUrls').value
+                .split('\n')
+                .map(u => u.trim())
+                .filter(u => u.length > 0);
+            const skipCategories = document.getElementById('urlSkip').value;
+
+            if (urls.length === 0) {
+                showStatus('url-ingest-status', 'Please enter at least one URL', 'error');
+                return;
+            }
+
+            document.getElementById('urlIngestBtn').disabled = true;
+            showStatus('url-ingest-status', 'Scraping pages and downloading PDFs... This may take several minutes.', 'info');
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/ingest-urls?scrape_pages=true&skip_categories=${encodeURIComponent(skipCategories)}`, {
+                    method: 'POST',
+                    headers: { 
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(urls)
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || 'Ingestion failed');
+
+                let resultHtml = `
+                    <div class="status success">
+                        ✅ Complete!<br>
+                        Total PDF URLs: ${data.total_urls}<br>
+                        PDFs processed: ${data.processed}<br>
+                        Questions added: ${data.questions_added}<br>
+                        Failed: ${data.failed}
+                    </div>
+                `;
+                
+                if (data.results && data.results.length > 0) {
+                    resultHtml += '<h4>Results:</h4><ul style="max-height:200px;overflow-y:auto;font-size:12px;">';
+                    data.results.forEach(r => {
+                        const icon = r.status === 'success' ? '✅' : '❌';
+                        resultHtml += `<li>${icon} ${r.url.substring(0, 60)}... - ${r.questions || 0} questions</li>`;
+                    });
+                    resultHtml += '</ul>';
+                }
+
+                document.getElementById('url-ingest-status').innerHTML = resultHtml;
+                fetchCustomQuestions();
+            } catch (err) {
+                showStatus('url-ingest-status', 'Error: ' + err.message, 'error');
+            }
+            
+            document.getElementById('urlIngestBtn').disabled = false;
+        }
+    </script>
+</body>
+</html>

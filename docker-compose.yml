@@ -1,0 +1,124 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: studybuddy-mongodb
+    restart: unless-stopped
+    ports:
+      - "27018:27017"  # Using 27018 externally (27017 already in use)
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-password123}
+      MONGO_INITDB_DATABASE: studybuddy
+    volumes:
+      - mongodb_data:/data/db
+      - ./backend/seed:/docker-entrypoint-initdb.d:ro
+    networks:
+      - studybuddy-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: studybuddy-backend
+    restart: unless-stopped
+    ports:
+      - "8001:8000"  # Using 8001 externally (8000 already in use)
+    environment:
+      MONGO_URI: mongodb://${MONGO_USERNAME:-admin}:${MONGO_PASSWORD:-password123}@mongodb:27017
+      DB_NAME: ${DB_NAME:-studybuddy}
+      JWT_SECRET: ${JWT_SECRET}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      FCM_SERVER_KEY: ${FCM_SERVER_KEY:-}
+    volumes:
+      - sb_chroma:/app/chroma_data
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - studybuddy-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis Cache (optional - for session/rate limiting)
+  redis:
+    image: redis:7-alpine
+    container_name: studybuddy-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"  # Using 6380 externally (6379 already in use)
+    volumes:
+      - redis_data:/data
+    networks:
+      - studybuddy-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Mongo Express - Database Admin UI (development only)
+  mongo-express:
+    image: mongo-express:latest
+    container_name: studybuddy-mongo-admin
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME:-admin}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD:-password123}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME:-admin}:${MONGO_PASSWORD:-password123}@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER:-admin}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASS:-admin123}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - studybuddy-network
+    profiles:
+      - dev
+
+  # One-off web ingest runner. Use profile to run only when requested:
+  # Usage: docker compose --profile ingest run ingest --user-id <USER_ID> --limit 30
+  ingest:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      MONGO_URI: mongodb://${MONGO_USERNAME:-admin}:${MONGO_PASSWORD:-password123}@mongodb:27017
+      DB_NAME: ${DB_NAME:-studybuddy}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    volumes:
+      - sb_chroma:/app/chroma_data
+    entrypoint: ["python", "-m", "app.web_ingest"]
+    command: ["--user-id", "${INGEST_USER_ID:-admin}", "--limit", "${INGEST_LIMIT:-30}"]
+    networks:
+      - studybuddy-network
+    profiles:
+      - ingest
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+  sb_chroma:
+    driver: local
+
+networks:
+  studybuddy-network:
+    driver: bridge
