@@ -5,7 +5,7 @@ export declare const callMicrotasks: () => void;
  * Lets you asynchronously run
  * [workletized](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/glossary#to-workletize)
  * functions on the [UI
- * thread](https://docs.swmansion.com/react-native-reanimated/docs/threading/runOnUI).
+ * thread](https://docs.swmansion.com/react-native-reanimated/docs/3.x/threading/runOnUI).
  *
  * This method does not schedule the work immediately but instead waits for
  * other worklets to be scheduled within the same JS loop. It uses
@@ -13,12 +13,12 @@ export declare const callMicrotasks: () => void;
  * within the same frame boundaries on the UI thread.
  *
  * @param fun - A reference to a function you want to execute on the [UI
- *   thread](https://docs.swmansion.com/react-native-reanimated/docs/threading/runOnUI)
+ *   thread](https://docs.swmansion.com/react-native-reanimated/docs/3.x/threading/runOnUI)
  *   from the [JavaScript
- *   thread](https://docs.swmansion.com/react-native-reanimated/docs/threading/runOnUI).
+ *   thread](https://docs.swmansion.com/react-native-reanimated/docs/3.x/threading/runOnUI).
  * @returns A function that accepts arguments for the function passed as the
  *   first argument.
- * @see https://docs.swmansion.com/react-native-reanimated/docs/threading/runOnUI
+ * @see https://docs.swmansion.com/react-native-reanimated/docs/3.x/threading/runOnUI
  */
 export declare function runOnUI<Args extends unknown[], ReturnValue>(worklet: (...args: Args) => ReturnValue): (...args: Args) => void;
 export declare function executeOnUIRuntimeSync<Args extends unknown[], ReturnValue>(worklet: (...args: Args) => ReturnValue): (...args: Args) => ReturnValue;
@@ -42,7 +42,7 @@ type RemoteFunction<Args extends unknown[], ReturnValue> = ReleaseRemoteFunction
  *   thread from the UI thread.
  * @returns A function that accepts arguments for the function passed as the
  *   first argument.
- * @see https://docs.swmansion.com/react-native-reanimated/docs/threading/runOnJS
+ * @see https://docs.swmansion.com/react-native-reanimated/docs/3.x/threading/runOnJS
  */
 export declare function runOnJS<Args extends unknown[], ReturnValue>(fun: ((...args: Args) => ReturnValue) | RemoteFunction<Args, ReturnValue> | WorkletFunction<Args, ReturnValue>): (...args: Args) => void;
 export {};

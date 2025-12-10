@@ -1,0 +1,11 @@
+node_modules/
+.expo/
+.expo-shared/
+.cache/
+.metro-cache/
+dist/
+build/
+web-build/
+npm-debug.log*
+yarn-error.log*
+expo-debug.log*

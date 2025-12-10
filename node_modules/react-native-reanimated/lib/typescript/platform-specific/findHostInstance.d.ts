@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import type { InternalHostInstance } from '../commonTypes';
 import type { IAnimatedComponentInternal } from '../createAnimatedComponent/commonTypes';
 type HostInstanceFabric = {
     __internalInstanceHandle?: Record<string, unknown>;
@@ -10,6 +10,6 @@ type HostInstancePaper = {
     viewConfig?: Record<string, unknown>;
 };
 export type HostInstance = HostInstanceFabric & HostInstancePaper;
-export declare function findHostInstance(component: IAnimatedComponentInternal | React.Component): HostInstance;
+export declare function findHostInstance(component: IAnimatedComponentInternal | InternalHostInstance): HostInstance;
 export {};
 //# sourceMappingURL=findHostInstance.d.ts.map

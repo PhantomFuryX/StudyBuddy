@@ -13,7 +13,7 @@ export type WorkletRuntime = {
  *   the same thread immediately after the runtime is created.
  * @returns WorkletRuntime which is a
  *   `jsi::HostObject<reanimated::WorkletRuntime>` - {@link WorkletRuntime}
- * @see https://docs.swmansion.com/react-native-reanimated/docs/threading/createWorkletRuntime
+ * @see https://docs.swmansion.com/react-native-reanimated/docs/3.x/threading/createWorkletRuntime
  */
 export declare function createWorkletRuntime(name: string, initializer?: () => void): WorkletRuntime;
 export declare function runOnRuntime<Args extends unknown[], ReturnValue>(workletRuntime: WorkletRuntime, worklet: (...args: Args) => ReturnValue): WorkletFunction<Args, ReturnValue>;
