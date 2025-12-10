@@ -5,13 +5,10 @@
     "version": "2.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "extra": {
-      "API_URL": "https://showerless-andy-noisily.ngrok-free.dev",
-      "eas": {
-        "projectId": "d4f4a689-f9dc-4ed8-966d-7342503bc560"
-      }
-    },
+    "icon": "./assets/icon.png",
     "splash": {
+      "image": "./assets/splashscreen.png",
+      "resizeMode": "contain",
       "backgroundColor": "#6C63FF"
     },
     "updates": {
@@ -26,6 +23,8 @@
     },
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon-foreground.png",
+        "backgroundImage": "./assets/adaptive-icon-background.png",
         "backgroundColor": "#6C63FF"
       },
       "package": "com.studybuddy.app"
@@ -35,6 +34,12 @@
     },
     "plugins": [
       "expo-asset"
-    ]
+    ],
+    "extra": {
+      "API_URL": "https://showerless-andy-noisily.ngrok-free.dev",
+      "eas": {
+        "projectId": "d4f4a689-f9dc-4ed8-966d-7342503bc560"
+      }
+    }
   }
 }
